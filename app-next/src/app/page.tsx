@@ -1,9 +1,9 @@
 'use client'
 
-import Image from 'next/image'
+// import Image from 'next/image'
 import { useState } from 'react'
 
-import Mp3Player from './Mp3Player'
+// import Mp3Player from './Mp3Player'
 
 export default function Home() {
   const [state, setState] = useState(0)
