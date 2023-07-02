@@ -2,9 +2,9 @@
 
 import Loading from '@/components/Loading'
 import { useEffect, useRef } from 'react'
-// import Loading from '@/components/loading'
+import { UserButton } from '@clerk/nextjs'
 
-export default function Home() {
+const Home = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
@@ -39,8 +39,8 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-black">
-    
       <Loading />
+      <UserButton afterSignOutUrl="/" />
       <button
         className="block w-full text-sm text-slate-500"
         onClick={playAudio}
@@ -57,3 +57,5 @@ export default function Home() {
     </main>
   )
 }
+
+export default Home

@@ -1,7 +1,8 @@
+import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
 import { Quattrocento_Sans } from 'next/font/google'
 
-const inter = Quattrocento_Sans({
+const font = Quattrocento_Sans({
   subsets: ['latin'],
   weight: '400',
 })
@@ -17,8 +18,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html lang="es">
+        <body className={font.className}>{children}</body>
+      </html>
+    </ClerkProvider>
   )
 }
