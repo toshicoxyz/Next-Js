@@ -8,8 +8,8 @@ const font = Quattrocento_Sans({
 })
 
 export const metadata = {
-  title: 'Portafolio',
-  description: 'Pagina de proyectos',
+  title: 'Ecommerce',
+  description: 'Proyecto de Ecommerce',
 }
 
 export default function RootLayout({
