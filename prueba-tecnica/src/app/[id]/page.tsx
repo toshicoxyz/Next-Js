@@ -15,7 +15,7 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
     if (params.id) {
       const getId = async (id: string) => {
         try {
-          const data = await getIdDate(db, id)
+          const data = (await getIdDate(db, params.id)) ?? null
           setCity(data)
           setLoading(false)
         } catch (error) {
@@ -49,7 +49,7 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
   return (
     <div className="flex items-center justify-center h-screen content-center">
       {city && (
-        <div className='bg-slate-500 p-4 rounded-md text-white'>
+        <div className="bg-slate-500 p-4 rounded-md text-white">
           <img
             className="rounded-full m-3 "
             src={

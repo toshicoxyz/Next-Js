@@ -4,9 +4,7 @@ import {
   getDocs,
   addDoc,
   getDoc,
-  doc,
-  query,
-  where,
+  doc
 } from 'firebase/firestore/lite'
 import { User } from '@/models/model'
 
@@ -40,7 +38,7 @@ async function getIdDate(db: Firestore, id: string) {
 
     if (documentSnapshot.exists()) {
       const documentData = documentSnapshot.data()
-      return { ...documentData, id: documentSnapshot.id }
+      return { ...documentData, id: documentSnapshot.id } as User
     } else {
       console.log('El documento no existe')
     }
