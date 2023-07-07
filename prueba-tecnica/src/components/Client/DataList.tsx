@@ -1,8 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { useEffect, useState } from 'react'
-import { List, ListItem, ListItemText, CircularProgress } from '@mui/material'
+import { use, useEffect, useState } from 'react'
+import {
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+  Avatar,
+} from '@mui/material'
 import { Firestore } from 'firebase/firestore/lite'
 import { getAllUsers } from '@/services/crud'
 import { User } from '@/models/model'
@@ -39,15 +45,11 @@ export default function DataList({ db, refreshData }: DataListProps) {
     <List className="w-full">
       {dataList.map(user => (
         <ListItem key={user.id}>
-          <img
+          <Avatar
             className="rounded-full m-3"
-            src={
-              user?.image
-                ? user.image
-                : 'https://static.vecteezy.com/system/resources/previews/022/133/714/original/user-profile-icon-for-any-purposes-vector.jpg'
-            }
+            src={user?.image}
             alt={user.first}
-            width={50}
+            sx={{ width: 50, height: 50 }}
           />
           <ListItemText primary={user.first} secondary={user.last} />
           <Link

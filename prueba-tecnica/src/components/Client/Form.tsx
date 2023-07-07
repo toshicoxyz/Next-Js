@@ -1,64 +1,82 @@
-'use client'
 
-import { useState } from 'react'
 import { Button, TextField } from '@mui/material'
 import { addUser } from '@/services/crud'
 import db from '@/firebase/config'
 import { User } from '@/models/model'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
 interface FormProps {
   onDataCreated: () => void
 }
 
 const Form: React.FC<FormProps> = ({ onDataCreated }) => {
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [birthYear, setBirthYear] = useState('')
-  const [image, setImage] = useState('')
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const data: User = {
-      first: firstName,
-      last: lastName,
-      born: parseInt(birthYear, 10),
-      image: image,
-    }
-
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<User>()
+  const onSubmit: SubmitHandler<User> = async data => {
     await addUser(db, data)
-    console.log('Se Creo Satisfacoriamente ;v')
     onDataCreated()
   }
 
   return (
-    <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit}>
-      <TextField
-        label="Nombres"
-        value={firstName}
-        onChange={e => setFirstName(e.target.value)}
-        required
-      />
-      <TextField
-        label="Apellidos"
-        value={lastName}
-        onChange={e => setLastName(e.target.value)}
-        required
-      />
-      <TextField
-        label="Edad"
-        value={birthYear}
-        onChange={e => setBirthYear(e.target.value)}
-        type="tel"
-        required
-      />
-      <TextField
-        label="Url Imagen"
-        placeholder="https://dominio.com/image.jpg"
-        value={image}
-        onChange={e => setImage(e.target.value)}
-        required
-      />
+    <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <TextField
+          label="Nombres"
+          {...register('first', {
+            required: { value: true, message: 'Completa el campo Nombres' },
+            pattern: {
+              value: /^[A-Za-z]+$/i,
+              message: 'Solo se permites Letras',
+            },
+            maxLength: { value: 10, message: 'Max length es 10' },
+          })}
+        />
+        <p className="text-center text-red-600">{errors.first?.message}</p>
+      </div>
+      <div>
+        <TextField
+          label="Apellidos"
+          {...register('last', {
+            required: { value: true, message: 'Completa el campo Apellidos' },
+            pattern: {
+              value: /^[A-Za-z]+$/i,
+              message: 'Solo se permites Letras',
+            },
+            maxLength: { value: 10, message: 'Max length es 10' },
+          })}
+        />
+        <p className="text-center text-red-600">{errors.last?.message}</p>
+      </div>
+      <div>
+        <TextField
+          type="number"
+          label="Edad"
+          {...register('born', {
+            required: { value: true, message: 'Completa el campo Edad' },
+            min: { value: 0, message: 'Min value is 0' },
+            max: { value: 150, message: 'Max value is 150' },
+          })}
+        />
+        <p className="text-center text-red-600">{errors.born?.message}</p>
+      </div>
+      <div>
+        <TextField
+          type="url"
+          label="Url Imagen"
+          {...register('image', {
+            required: { value: true, message: 'Completa el campo Url' },
+            pattern: {
+              value: /^(ftp|http|https):\/\/[^ "]+$/,
+              message: 'Ingresa una URL válida',
+            },
+          })}
+          placeholder="https://img/image.jpg"
+        />
+        <p className="text-center text-red-600">{errors.image?.message}</p>
+      </div>
       <Button
         className="col-span-2"
         type="submit"

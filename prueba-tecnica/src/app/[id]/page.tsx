@@ -51,13 +51,8 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
       {city && (
         <div className="border-4 border-gray-500/25 p-4 rounded-2xl text-black bg-transparent">
           <Avatar
-            sizes="200"
             className="rounded-3xl m-auto"
-            src={
-              city?.image
-                ? city.image
-                : 'https://static.vecteezy.com/system/resources/previews/022/133/714/original/user-profile-icon-for-any-purposes-vector.jpg'
-            }
+            src={city?.image}
             alt={city.first}
             sx={{ width: 200, height: 200 }}
           />
