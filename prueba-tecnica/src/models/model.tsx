@@ -3,5 +3,5 @@ export interface User {
   last: string
   born: number
   first: string
-  image?: string
+  image: string
 }
