@@ -1,7 +1,6 @@
 'use client'
 
 import { Grid } from '@mui/material'
-
 import db from '@/firebase/config'
 import Form from '@/components/Client/Form'
 import DataList from '@/components/Client/DataList'

@@ -2,18 +2,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import {
-  List,
-  ListItem,
-  ListItemText,
-  CircularProgress,
-  Typography,
-} from '@mui/material'
+import { List, ListItem, ListItemText, CircularProgress } from '@mui/material'
 import { Firestore } from 'firebase/firestore/lite'
-import { getCities } from '@/firebase/crud'
+import { getAllUsers } from '@/services/crud'
 import { User } from '@/models/model'
 import Link from 'next/link'
-import Image from 'next/image'
 
 interface DataListProps {
   db: Firestore
@@ -27,7 +20,7 @@ export default function DataList({ db, refreshData }: DataListProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getCities(db)
+        const data = await getAllUsers(db)
         setDataList(data)
         setLoading(false)
       } catch (error) {
@@ -51,15 +44,18 @@ export default function DataList({ db, refreshData }: DataListProps) {
             src={
               user?.image
                 ? user.image
-                : 'https://economia3.com/wp-content/uploads/2019/12/Natalia-Juarranz-EQUIPO-HUMANO.jpg'
+                : 'https://static.vecteezy.com/system/resources/previews/022/133/714/original/user-profile-icon-for-any-purposes-vector.jpg'
             }
             alt={user.first}
             width={50}
           />
           <ListItemText primary={user.first} secondary={user.last} />
-          <Typography component={Link} href={`/${user.id}`} variant="button">
+          <Link
+            className="rounded-2xl p-5 border border-slate-300 hover:border-slate-400"
+            href={`/${user.id}`}
+          >
             Ver
-          </Typography>
+          </Link>
         </ListItem>
       ))}
     </List>

@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { getIdDate } from '@/firebase/crud'
+import { getIdUser } from '@/services/crud'
 import { useEffect, useState } from 'react'
 import { User } from '@/models/model'
 import db from '@/firebase/config'
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, Avatar } from '@mui/material'
 
 const NuevaPagina = ({ params }: { params: { id: string } }) => {
   const [city, setCity] = useState<User | null>(null)
@@ -15,7 +15,7 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
     if (params.id) {
       const getId = async (id: string) => {
         try {
-          const data = (await getIdDate(db, params.id)) ?? null
+          const data = (await getIdUser(db, params.id)) ?? null
           setCity(data)
           setLoading(false)
         } catch (error) {
@@ -49,21 +49,30 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
   return (
     <div className="flex items-center justify-center h-screen content-center">
       {city && (
-        <div className="bg-slate-500 p-4 rounded-md text-white">
-          <img
-            className="rounded-full m-3 "
+        <div className="border-4 border-gray-500/25 p-4 rounded-2xl text-black bg-transparent">
+          <Avatar
+            sizes="200"
+            className="rounded-3xl m-auto"
             src={
               city?.image
                 ? city.image
                 : 'https://economia3.com/wp-content/uploads/2019/12/Natalia-Juarranz-EQUIPO-HUMANO.jpg'
             }
             alt={city.first}
-            width={150}
+            sx={{ width: 100, height: 100 }}
           />
-          <p>ID: {city?.id}</p>
-          <p>Nombre: {city?.first}</p>
-          <p>Apellido: {city?.last}</p>
-          <p>Edad: {city?.born}</p>
+          <p>
+            <b>ID:</b> {city?.id}
+          </p>
+          <p>
+            <b>Nombre:</b> {city?.first}
+          </p>
+          <p>
+            <b>Apellido:</b> {city?.last}
+          </p>
+          <p>
+            <b>Edad:</b> {city?.born}
+          </p>
         </div>
       )}
     </div>

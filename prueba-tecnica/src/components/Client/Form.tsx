@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Button, TextField } from '@mui/material'
-import { addDate } from '@/firebase/crud'
+import { addUser } from '@/services/crud'
 import db from '@/firebase/config'
 import { User } from '@/models/model'
 
@@ -26,7 +26,7 @@ const Form: React.FC<FormProps> = ({ onDataCreated }) => {
       image: image,
     }
 
-    await addDate(db, data)
+    await addUser(db, data)
     console.log('Se Creo Satisfacoriamente ;v')
     onDataCreated()
   }
