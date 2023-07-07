@@ -56,10 +56,10 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
             src={
               city?.image
                 ? city.image
-                : 'https://economia3.com/wp-content/uploads/2019/12/Natalia-Juarranz-EQUIPO-HUMANO.jpg'
+                : 'https://static.vecteezy.com/system/resources/previews/022/133/714/original/user-profile-icon-for-any-purposes-vector.jpg'
             }
             alt={city.first}
-            sx={{ width: 100, height: 100 }}
+            sx={{ width: 200, height: 200 }}
           />
           <p>
             <b>ID:</b> {city?.id}
