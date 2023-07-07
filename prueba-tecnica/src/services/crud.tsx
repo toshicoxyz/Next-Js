@@ -5,23 +5,28 @@ import {
   addDoc,
   getDoc,
   doc,
-} from 'firebase/firestore/lite'
+  onSnapshot,
+} from 'firebase/firestore'
 import { User } from '@/models/model'
 
 async function getAllUsers(db: Firestore) {
-  const citiesCol = collection(db, 'cities')
-  const citySnapshot = await getDocs(citiesCol)
-  const cityList: User[] = citySnapshot.docs.map(doc => {
-    const { first, last, born, image } = doc.data()
-    return {
-      id: doc.id,
-      first,
-      last,
-      born,
-      image,
-    }
-  })
-  return cityList
+  try {
+    const citiesCol = collection(db, 'cities')
+    const citySnapshot = await getDocs(citiesCol)
+    const cityList: User[] = citySnapshot.docs.map(doc => {
+      const { first, last, born, image } = doc.data()
+      return {
+        id: doc.id,
+        first,
+        last,
+        born,
+        image,
+      }
+    })
+    return cityList
+  } catch (error) {
+    console.error('Error: ', error)
+  }
 }
 
 // async function getAllCities(db: Firestore) {
@@ -56,4 +61,26 @@ async function addUser(db: Firestore, body: Object) {
   }
 }
 
-export { getAllUsers, addUser, getIdUser }
+function getAllUsersUp(db: Firestore, getAllCities: () => void) {
+  return onSnapshot(
+    collection(db, 'cities'),
+    snapshot => {
+      snapshot.docChanges().forEach(change => {
+        if (change.type === 'added') {
+          getAllCities()
+        }
+        if (change.type === 'modified') {
+          getAllCities()
+        }
+        if (change.type === 'removed') {
+          getAllCities()
+        }
+      })
+    },
+    error => {
+      console.log(error)
+    }
+  )
+}
+
+export { getAllUsers, addUser, getIdUser, getAllUsersUp }

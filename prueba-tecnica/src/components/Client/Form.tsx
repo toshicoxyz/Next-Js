@@ -6,10 +6,6 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
-interface FormProps {
-  onDataCreated: () => void
-}
-
 const schema = yup
   .object({
     first: yup
@@ -36,7 +32,7 @@ const schema = yup
   })
   .required()
 
-const Form: React.FC<FormProps> = ({ onDataCreated }) => {
+const Form = () => {
   const {
     register,
     handleSubmit,
@@ -47,7 +43,6 @@ const Form: React.FC<FormProps> = ({ onDataCreated }) => {
   })
   const onSubmit: SubmitHandler<User> = async data => {
     await addUser(db, data)
-    onDataCreated()
     reset()
   }
 

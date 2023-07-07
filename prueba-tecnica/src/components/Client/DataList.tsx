@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   List,
   ListItem,
@@ -9,33 +9,37 @@ import {
   CircularProgress,
   Avatar,
 } from '@mui/material'
-import { Firestore } from 'firebase/firestore/lite'
-import { getAllUsers } from '@/services/crud'
+import { Firestore } from 'firebase/firestore'
+import { getAllUsers, getAllUsersUp } from '@/services/crud'
 import { User } from '@/models/model'
 import Link from 'next/link'
 
 interface DataListProps {
   db: Firestore
-  refreshData: boolean
 }
 
-export default function DataList({ db, refreshData }: DataListProps) {
+export default function DataList({ db }: DataListProps) {
   const [dataList, setDataList] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getAllUsers(db)
+        const data = (await getAllUsers(db)) ?? []
         setDataList(data)
         setLoading(false)
       } catch (error) {
         console.error('Error fetching data: ', error)
       }
     }
+    const unsubscribe = getAllUsersUp(db, fetchData)
 
     fetchData()
-  }, [db, refreshData])
+
+    return () => {
+      unsubscribe()
+    }
+  }, [db])
 
   if (loading) {
     return <CircularProgress />

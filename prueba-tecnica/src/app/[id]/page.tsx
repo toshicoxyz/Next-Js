@@ -15,7 +15,7 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
     if (params.id) {
       const getId = async (id: string) => {
         try {
-          const data = (await getIdUser(db, params.id)) ?? null
+          const data = (await getIdUser(db, id)) ?? null
           setCity(data)
           setLoading(false)
         } catch (error) {
