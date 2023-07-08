@@ -118,7 +118,7 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
                         })
                     }}
                   >
-                    Share
+                    Compartir
                   </Button>
                 </CardActions>
               </CardContent>

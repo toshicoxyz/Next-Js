@@ -52,7 +52,7 @@ export default function Home() {
           />
         </div>
 
-        {/* <h1 className="">Usando Material UI con Next.js 13</h1> */}
+        <h1 className="pb-3 text-gray-400">© Copyright 2023 - T O S H I C O</h1>
         <Form />
       </Grid>
       <DataList db={db} />
