@@ -76,14 +76,14 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
                   height: '100%',
                 }}
               >
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography gutterBottom variant="h3" component="div">
                   {user.first}
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Last: {user.last}
+                <Typography gutterBottom variant="h4" color="text.secondary">
+                  {user.last}
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Born: {user.born}
+                <Typography gutterBottom variant="h5" color="text.secondary">
+                  {user.born}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                   Lorem Ipsum is simply dummy text of the printing and

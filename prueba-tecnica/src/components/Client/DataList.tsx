@@ -75,14 +75,14 @@ export default function DataList({ db }: DataListProps) {
                     height: '100%',
                   }}
                 >
-                  <Typography gutterBottom variant="h5" component="div">
+                  <Typography gutterBottom variant="h3" component="div">
                     {item.first}
                   </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    Last: {item.last}
+                  <Typography gutterBottom variant="h4" color="text.secondary">
+                    {item.last}
                   </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    Born: {item.born}
+                  <Typography gutterBottom variant="h5" color="text.secondary">
+                    {item.born}
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
                     Lorem Ipsum is simply dummy text of the printing and
@@ -117,7 +117,7 @@ export default function DataList({ db }: DataListProps) {
                           })
                       }}
                     >
-                      Share
+                      Compartir
                     </Button>
                   </CardActions>
                 </CardContent>

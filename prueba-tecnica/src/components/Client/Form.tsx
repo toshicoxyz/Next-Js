@@ -76,10 +76,21 @@ const Form = () => {
       />
 
       <Button
+        size="small"
+        sx={{
+          padding: 2,
+          width: '100%',
+          margin: 'auto',
+          '&:hover': {
+            backgroundColor: '#007bff',
+            color: 'white',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s ease',
+          },
+        }}
         className="col-span-2"
         type="submit"
         variant="outlined"
-        color="success"
       >
         Agregar Usuario
       </Button>
