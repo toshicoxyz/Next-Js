@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, TextField } from '@mui/material'
 import { addUser } from '@/services/crud'
 import db from '@/firebase/config'
@@ -5,8 +7,10 @@ import { User } from '@/models/model'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import dynamic from 'next/dynamic'
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const schema = yup
   .object({

@@ -43,14 +43,14 @@ export default function Home() {
                 'https://icons.veryicon.com/png/o/business/vscode-program-item-icon/typescript-def.png'
               }
               width={75}
-              alt="Tailwind_CSS_Logo"
+              alt="typescript"
             />
             <img
               src={
                 'https://cdn4.iconfinder.com/data/icons/google-i-o-2016/512/google_firebase-2-512.png'
               }
               width={75}
-              alt="Tailwind_CSS_Logo"
+              alt="google_firebase"
             />
           </div>
 
