@@ -8,7 +8,6 @@ import db from '@/firebase/config'
 import {
   CircularProgress,
   Card,
-  Link,
   Grid,
   CardContent,
   Typography,
@@ -17,6 +16,7 @@ import {
   CardMedia,
   Snackbar,
 } from '@mui/material'
+import CopyToClipboard from 'react-copy-to-clipboard'
 
 const NuevaPagina = ({ params }: { params: { id: string } }) => {
   const [user, setUser] = useState<User | null>(null)
@@ -64,6 +64,7 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
         <Card
           key={user.id}
           sx={{
+            minWidth: '88vw',
             margin: 2,
           }}
         >
@@ -85,41 +86,40 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
                 <Typography gutterBottom variant="h5" color="text.secondary">
                   {user.born}
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industrys
-                  standard dummy text ever since the 1500s, when an unknown
-                </Typography>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{
+                    wordWrap: 'break-word', // Permite ajustar el texto automáticamente y salto de línea
+                    whiteSpace: 'pre-line', // Mantiene los espacios en blanco y realiza saltos de línea
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: user.description || '<p>Sin descripcion</p>',
+                  }}
+                />
                 <CardActions>
-                  <Button
-                    size="small"
-                    sx={{
-                      padding: 2,
-                      margin: 'auto',
-                      '&:hover': {
-                        backgroundColor: '#007bff',
-                        color: 'white',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.3s ease',
-                      },
-                    }}
-                    onClick={e => {
-                      e.preventDefault()
-                      const link = `${window.location.origin}/${user.id}`
-                      navigator.clipboard
-                        .writeText(link)
-                        .then(() => {
-                          setSnackbarOpen(true)
-                          // Puedes mostrar un mensaje de éxito aquí si lo deseas
-                        })
-                        .catch(error => {
-                          console.error('Error copying link:', error)
-                          // Puedes mostrar un mensaje de error aquí si lo deseas
-                        })
-                    }}
+                  <CopyToClipboard
+                    text={`${window.location.origin}/${user.id}`}
                   >
-                    Compartir
-                  </Button>
+                    <Button
+                      sx={{
+                        padding: 2,
+                        margin: 'auto',
+                        '&:hover': {
+                          backgroundColor: '#007bff',
+                          color: 'white',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.3s ease',
+                        },
+                      }}
+                      onClick={e => {
+                        e.preventDefault()
+                        setSnackbarOpen(true)
+                      }}
+                    >
+                      Compartir
+                    </Button>
+                  </CopyToClipboard>
                 </CardActions>
               </CardContent>
             </Grid>
@@ -127,9 +127,8 @@ const NuevaPagina = ({ params }: { params: { id: string } }) => {
               <CardMedia
                 sx={{ width: '100%', paddingTop: '100%' }}
                 image={
-                  user?.image
-                    ? user.image
-                    : 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+                  user.image ||
+                  'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
                 }
                 title={user.first}
               />

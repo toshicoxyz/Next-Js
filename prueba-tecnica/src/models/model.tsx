@@ -4,4 +4,5 @@ export interface User {
   born: number
   first: string
   image: string
+  description: string
 }

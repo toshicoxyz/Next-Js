@@ -5,6 +5,8 @@ import { User } from '@/models/model'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
 const schema = yup
   .object({
@@ -23,12 +25,22 @@ const schema = yup
       .positive('El numero tiene que ser positivo')
       .typeError('Ingresa un número válido')
       .required('Completa el campo Edad')
-      .min(0, 'El valor mínimo es 0')
+      .min(1, 'El valor mínimo es 1')
       .max(150, 'El valor máximo es 150'),
     image: yup
       .string()
       .url('Ingresa una URL válida')
-      .required('Completa el campo Url'),
+      .required('Completa el campo Url')
+      .matches(/\.(jpg|png)$/, 'URL (jpg o png)'),
+    description: yup
+      .string()
+      .max(200, 'El máximo de caracteres es 200')
+      .matches(/^(?!<p><br\s?\/?><\/p>).+$/, 'No se permiten campo vacios')
+      .matches(
+        /^(?!.*<\/?(h1|h2|h3|li)[^>]*>).*$/,
+        'No se permiten titulos, ni listas'
+      )
+      .required('La descripción es requerida'),
   })
   .required()
 
@@ -37,6 +49,8 @@ const Form = () => {
     register,
     handleSubmit,
     reset,
+    trigger,
+    setValue,
     formState: { errors },
   } = useForm<User>({
     resolver: yupResolver(schema),
@@ -44,6 +58,11 @@ const Form = () => {
   const onSubmit: SubmitHandler<User> = async data => {
     await addUser(db, data)
     reset()
+  }
+
+  const handleDescriptionChange = (value: string) => {
+    setValue('description', value)
+    trigger('description') // Validar el campo 'description' y mostrar los errores
   }
 
   return (
@@ -74,6 +93,29 @@ const Form = () => {
         {...register('image')}
         placeholder="https://img/image.jpg"
       />
+
+      <ReactQuill
+        className="w-full h-max-2 pb-11 col-span-2"
+        theme="snow"
+        placeholder="Agrega una descripcion"
+        onChange={handleDescriptionChange}
+      />
+
+      <p
+        className="col-span-2"
+        style={{
+          fontSize: '0.75rem',
+          textAlign: 'center',
+          fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
+          lineHeight: '1.66',
+          letterSpacing: '0.03333em',
+          fontWeight: '400',
+          color: 'rgba(0, 0, 0, 0.6)',
+          marginTop: '-14px',
+        }}
+      >
+        {errors?.description?.message}
+      </p>
 
       <Button
         size="small"

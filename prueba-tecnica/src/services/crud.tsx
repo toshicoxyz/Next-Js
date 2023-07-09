@@ -14,13 +14,14 @@ async function getAllUsers(db: Firestore) {
     const citiesCol = collection(db, 'cities')
     const citySnapshot = await getDocs(citiesCol)
     const cityList: User[] = citySnapshot.docs.map(doc => {
-      const { first, last, born, image } = doc.data()
+      const { first, last, born, image, description } = doc.data()
       return {
         id: doc.id,
         first,
         last,
         born,
         image,
+        description,
       }
     })
     return cityList
