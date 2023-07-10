@@ -9,6 +9,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import 'react-quill/dist/quill.snow.css'
 import dynamic from 'next/dynamic'
+import { StyleSheetManager } from 'styled-components'
+import rtlPlugin from 'stylis-plugin-rtl'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
