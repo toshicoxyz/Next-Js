@@ -3,15 +3,10 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
-import { ForceGraph3D } from 'react-force-graph'
+import ForceGraph3D from 'react-force-graph-3d'
 import { CircularProgress } from '@mui/material'
 import { TextureLoader, SpriteMaterial, Sprite } from 'three'
 import { PokeApi, Pokemon } from '@/models/PokeApi'
-
-interface Data {
-  nodes: Node[]
-  links: Link[]
-}
 
 interface Node {
   id: number
@@ -65,12 +60,12 @@ const Home = () => {
           )
 
           nextUrl = nextData.next
-          setPokeApi(prevData => ({
+          setPokeApi((prevData: any) => ({
             ...prevData,
             results: [...nextData.results],
             next: nextData.next,
           }))
-          setPokemones(prevPokemons => [
+          setPokemones((prevPokemons: any) => [
             ...prevPokemons,
             ...pokemonsWithDetails,
           ])
@@ -83,9 +78,9 @@ const Home = () => {
     fetchPokemons()
   }, [])
 
-  useEffect(() => {
-    console.log(pokeApi)
-  }, [pokeApi])
+  // useEffect(() => {
+  //   console.log(pokeApi)
+  // }, [pokeApi])
 
   const nodeThreeObject = useMemo(
     () =>
@@ -106,11 +101,13 @@ const Home = () => {
 
   return (
     <>
-      <ForceGraph3D
-        enableNodeDrag={false}
-        nodeThreeObject={nodeThreeObject}
-        graphData={{ nodes: pokemones, links: [] }}
-      />
+      {typeof window !== 'undefined' && (
+        <ForceGraph3D
+          enableNodeDrag={false}
+          nodeThreeObject={nodeThreeObject}
+          graphData={{ nodes: pokemones, links: [] }}
+        />
+      )}
     </>
   )
 }
