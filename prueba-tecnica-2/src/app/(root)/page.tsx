@@ -1,24 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import ForceGraph3D from 'react-force-graph-3d'
-import ForceGraph2D, { NodeObject } from 'react-force-graph-2d'
+import ForceGraph2D from 'react-force-graph-2d'
 import { CircularProgress } from '@mui/material'
-import { TextureLoader, SpriteMaterial, Sprite, Color } from 'three'
+import { TextureLoader, SpriteMaterial, Sprite } from 'three'
 import SpriteText from 'three-spritetext'
-import { PokeApi, Pokemon, PokemonType } from '@/models/PokeApi'
+import { PokeApi, Pokemon } from '@/models/PokeApi'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
-
-interface Node {
-  id: string
-  name: string
-  sprites: {
-    front_default: string
-  }
-  types: PokemonType[]
-}
 
 interface Link {
   source: string
@@ -122,29 +113,10 @@ const Home = () => {
     setLinks(XD)
   }, [pokemones])
 
-  // const nodeThreeObject = useMemo(
-  //   () =>
-  //     ({ sprites, name }: Pokemon): Sprite => {
-  //       if (sprites?.front_default) {
-  //         const imgTexture = new TextureLoader().load(sprites.front_default)
-  //         const material = new SpriteMaterial({ map: imgTexture })
-  //         const sprite = new Sprite(material)
-  //         sprite.scale.set(12, 12, 1)
-  //         return sprite
-  //       }
-  //       const textSprite = new SpriteText(name)
-  //       textSprite.textHeight = 8
-  //       return textSprite
-  //     },
-  //   []
-  // )
   if (loading) {
     return (
-      <div
-        className="flex items-center justify-center min-h-screen bg-black"
-        style={{ color: 'white' }}
-      >
-        <CircularProgress />
+      <div className="flex items-center justify-center min-h-screen bg-black text-white">
+        <CircularProgress className="text-white" />
       </div>
     )
   }
@@ -309,29 +281,27 @@ const Home = () => {
               }}
               backgroundColor={day ? 'white' : 'black'}
             />
-          ) : (
-            mode === 2 && (
-              <ForceGraph2D
-                nodeCanvasObject={(node, ctx) => {
-                  const name = node.name
-                  const fontSize = 8
-                  ctx.font = `${fontSize}px Sans-Serif`
-                  ctx.fillStyle = day ? 'black' : 'white'
-                  ctx.fillText(name, node.x || 8, node.y || 8)
-                }}
-                graphData={{
-                  nodes: [...pokemones],
-                  links: [...links],
-                }}
-                linkDirectionalArrowLength={3.5}
-                linkCurvature={0.25}
-                linkColor={() => {
-                  return day ? 'black' : 'white'
-                }}
-                backgroundColor={day ? 'white' : 'black'}
-              />
-            )
-          )}
+          ) : mode === 2 ? (
+            <ForceGraph2D
+              nodeCanvasObject={(node, ctx) => {
+                const name = node.name
+                const fontSize = 8
+                ctx.font = `${fontSize}px Sans-Serif`
+                ctx.fillStyle = day ? 'black' : 'white'
+                ctx.fillText(name, node.x || 8, node.y || 8)
+              }}
+              graphData={{
+                nodes: [...pokemones],
+                links: [...links],
+              }}
+              linkDirectionalArrowLength={3.5}
+              linkCurvature={0.25}
+              linkColor={() => {
+                return day ? 'black' : 'white'
+              }}
+              backgroundColor={day ? 'white' : 'black'}
+            />
+          ) : null}
         </>
       )}
       <h2 className="text-gray-400 absolute bottom-0 left-0 right-0 text-center p-5">
