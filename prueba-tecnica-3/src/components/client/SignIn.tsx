@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -20,12 +19,12 @@ const schema = yup
       .string()
       .required('Completa el campo Contraseña')
       .min(6, 'Contraseña - 6 caracteres'),
+    rol: yup.string().optional(),
   })
   .required()
 
 const SignIn = () => {
   const { signIn, signUp } = useAuth()
-  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -53,11 +52,18 @@ const SignIn = () => {
         return
       }
     } else if (mode === 'signUp') {
-      const result = await signUp(data.email, data.password)
+      const result = await signUp(data.email, data.password, data.rol || 'user')
+      console.log(data.rol)
       if (result === 'auth/email-already-in-use') {
         setError('email', {
           type: 'manual',
           message: `El correo ya esta registrado`,
+        })
+        return
+      } else if (result === 'auth/invalid-email') {
+        setError('email', {
+          type: 'manual',
+          message: `El correo es invalido`,
         })
         return
       }
@@ -161,6 +167,18 @@ const SignIn = () => {
         </label>
       </div>
       <ErrorMessage>{errors.password?.message}</ErrorMessage>
+      {mode === 'signUp' ? (
+        <select
+          {...register('rol')}
+          className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+        >
+          <option defaultValue={'user'} value="admin">
+            Admin
+          </option>
+          <option value="user">User</option>
+        </select>
+      ) : null}
+
       <motion.button
         transition={{ duration: 500 }}
         className={`transition-colors duration-500 col-span-2 w-full ${

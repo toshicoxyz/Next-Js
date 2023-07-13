@@ -2,13 +2,13 @@
 
 import { Button, TextField } from '@mui/material'
 import { addUser } from '@/services/crud'
-import { db } from '@/firebase/config'
 import { User } from '@/models/model'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import 'react-quill/dist/quill.snow.css'
 import dynamic from 'next/dynamic'
+import { firestore } from '@/firebase/config'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
@@ -60,7 +60,7 @@ const Form = () => {
     resolver: yupResolver(schema),
   })
   const onSubmit: SubmitHandler<User> = async data => {
-    await addUser(db, data)
+    await addUser(firestore, data)
     reset()
   }
 

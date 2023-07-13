@@ -7,15 +7,19 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
-  getAuth,
-  User,
+  User as UserApp,
 } from 'firebase/auth'
-import app from '@/firebase/config'
+import { auth, firestore } from '@/firebase/config'
+import { setDoc, doc, getDoc } from 'firebase/firestore'
+
+interface User extends UserApp {
+  rol: string
+}
 
 type AuthContextType = {
   user: User | null
   signIn: (email: string, password: string) => Promise<string>
-  signUp: (email: string, password: string) => Promise<string>
+  signUp: (email: string, password: string, rol: string) => Promise<string>
   signOut: () => Promise<void>
 }
 
@@ -29,6 +33,13 @@ export function useAuth() {
   return context
 }
 
+async function getRol(uid: string) {
+  const docRef = doc(firestore, `users/${uid}`)
+  const docuCifrada = await getDoc(docRef)
+  const info = docuCifrada.data()
+  return info?.rol
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
     if (typeof window !== 'undefined') {
@@ -36,13 +47,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return savedUser ? JSON.parse(savedUser) : null
     }
   })
-  const auth = getAuth(app)
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, x => {
-      console.log(x)
-      console.log(user)
-      setUser(x)
+    const unsubscribe = onAuthStateChanged(auth, async x => {
+      if (x) {
+        const rol = await getRol(x.uid)
+        setUser({ ...x, rol })
+      } else {
+        setUser(null)
+      }
     })
 
     return () => unsubscribe()
@@ -56,8 +69,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email,
         password
       )
-      setUser(userCredential.user)
-      localStorage.setItem('user', JSON.stringify(userCredential))
+      const rol = await getRol(userCredential.user.uid)
+      console.log(rol)
+      setUser({ ...userCredential.user, rol })
+      localStorage.setItem(
+        'user',
+        JSON.stringify({ ...userCredential.user, rol })
+      )
       return ''
     } catch (error: any) {
       const errorCode = error.code
@@ -67,17 +85,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   // Función para Registrarse
-  async function signUp(email: string, password: string): Promise<string> {
+  async function signUp(
+    email: string,
+    password: string,
+    rol: string
+  ): Promise<string> {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       )
-      setUser(userCredential.user)
+      const docuRef = doc(firestore, `users/${userCredential.user.uid}`)
+      setDoc(docuRef, { correo: email, rol })
+      setUser({ ...userCredential.user, rol })
       return ''
     } catch (error: any) {
       const errorCode = error.code
+      console.log(errorCode)
       // const errorMessage = error.message
       return errorCode
     }
