@@ -1,8 +1,8 @@
 'use client'
 
 import { Button, TextField } from '@mui/material'
-import { addUser } from '@/services/crud'
-import { User } from '@/models/model'
+import { addNote } from '@/services/crud'
+import { Note } from '@/models/model'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -14,28 +14,11 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const schema = yup
   .object({
-    first: yup
+    title: yup
       .string()
       .required('Completa el campo Nombre')
       .matches(/^[A-Za-z]+$/, 'Solo se permiten letras')
       .max(10, 'El máximo de caracteres es 10'),
-    last: yup
-      .string()
-      .required('Completa el campo Apellidos')
-      .matches(/^[A-Za-z]+$/, 'Solo se permiten letras')
-      .max(10, 'El máximo de caracteres es 10'),
-    born: yup
-      .number()
-      .positive('El numero tiene que ser positivo')
-      .typeError('Ingresa un número válido')
-      .required('Completa el campo Edad')
-      .min(1, 'El valor mínimo es 1')
-      .max(150, 'El valor máximo es 150'),
-    image: yup
-      .string()
-      .url('Ingresa una URL válida')
-      .required('Completa el campo Url')
-      .matches(/\.(jpg|png)$/, 'URL (jpg o png)'),
     description: yup
       .string()
       .max(200, 'El máximo de caracteres es 200')
@@ -56,11 +39,11 @@ const Form = () => {
     trigger,
     setValue,
     formState: { errors },
-  } = useForm<User>({
+  } = useForm<Note>({
     resolver: yupResolver(schema),
   })
-  const onSubmit: SubmitHandler<User> = async data => {
-    await addUser(firestore, data)
+  const onSubmit: SubmitHandler<Note> = async data => {
+    await addNote(firestore, data)
     reset()
   }
 
@@ -72,37 +55,17 @@ const Form = () => {
   return (
     <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit(onSubmit)}>
       <TextField
-        helperText={errors.first?.message}
-        label="Nombres"
-        {...register('first')}
-      />
-
-      <TextField
-        helperText={errors.last?.message}
-        label="Apellidos"
-        {...register('last')}
-      />
-
-      <TextField
-        type="number"
-        helperText={errors.born?.message}
-        label="Edad"
-        {...register('born')}
-      />
-
-      <TextField
-        type="url"
-        label="Url Imagen"
-        helperText={errors.image?.message}
-        {...register('image')}
-        placeholder="https://img/image.jpg"
-      />
-
-      <ReactQuill
         className="w-full h-max-2 pb-11 col-span-2"
-        theme="snow"
+        helperText={errors.title?.message}
+        label="Titulo"
+        {...register('title')}
+      />
+
+      <TextField
+        className="w-full h-max-2 pb-11 col-span-2"
         placeholder="Agrega una descripcion"
-        onChange={handleDescriptionChange}
+        helperText={errors.description?.message}
+        {...register('description')}
       />
 
       <p
@@ -138,7 +101,7 @@ const Form = () => {
         type="submit"
         variant="outlined"
       >
-        Agregar Usuario
+        Crear Nota
       </Button>
     </form>
   )

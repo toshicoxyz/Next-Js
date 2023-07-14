@@ -10,7 +10,7 @@ import {
   User as UserApp,
 } from 'firebase/auth'
 import { auth, firestore } from '@/firebase/config'
-import { setDoc, doc, getDoc } from 'firebase/firestore'
+import { setDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
 
 interface User extends UserApp {
   rol: string
@@ -19,7 +19,13 @@ interface User extends UserApp {
 type AuthContextType = {
   user: User | null
   signIn: (email: string, password: string) => Promise<string>
-  signUp: (email: string, password: string, rol: string) => Promise<string>
+  signUp: (email: string, password: string) => Promise<string>
+  upgradeUserRol: (id: string, rol: string) => Promise<void>
+  upgradeNoteTitle: (id: string | undefined, title: string) => Promise<void>
+  upgradeNoteDescription: (
+    id: string | undefined,
+    descripcion: string
+  ) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -85,11 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   // Función para Registrarse
-  async function signUp(
-    email: string,
-    password: string,
-    rol: string
-  ): Promise<string> {
+  async function signUp(email: string, password: string): Promise<string> {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -97,14 +99,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password
       )
       const docuRef = doc(firestore, `users/${userCredential.user.uid}`)
-      setDoc(docuRef, { correo: email, rol })
-      setUser({ ...userCredential.user, rol })
+      setDoc(docuRef, { correo: email, rol: 'user' })
+      setUser({ ...userCredential.user, rol: 'user' })
       return ''
     } catch (error: any) {
       const errorCode = error.code
       console.log(errorCode)
       // const errorMessage = error.message
       return errorCode
+    }
+  }
+
+  // Función para actualizar rol del usuario
+  async function upgradeUserRol(id: string, rol: string) {
+    if (id) {
+      const documentRef = doc(firestore, `users/${id}`)
+      await updateDoc(documentRef, { rol })
+    }
+  }
+
+  // Función para actualizar title del note
+  async function upgradeNoteTitle(id: string | undefined, title: string) {
+    if (id) {
+      const documentRef = doc(firestore, `note/${id}`)
+      await updateDoc(documentRef, { title })
+    }
+  }
+
+  async function upgradeNoteDescription(id: string | undefined, description: string) {
+    if (id) {
+      const documentRef = doc(firestore, `note/${id}`)
+      await updateDoc(documentRef, { description })
     }
   }
 
@@ -125,6 +150,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signIn,
     signUp,
     signOut: handleSignOut,
+    upgradeUserRol,
+    upgradeNoteTitle,
+    upgradeNoteDescription
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

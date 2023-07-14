@@ -19,7 +19,6 @@ const schema = yup
       .string()
       .required('Completa el campo Contraseña')
       .min(6, 'Contraseña - 6 caracteres'),
-    rol: yup.string().matches(/\S+/, 'El campo Rol no puede estar vacío'),
   })
   .required()
 
@@ -60,7 +59,6 @@ const SignIn = () => {
       const result: string = await signUp(
         data.email,
         data.password,
-        data.rol || 'user'
       )
       if (result === 'auth/email-already-in-use') {
         setError('email', {
@@ -183,7 +181,7 @@ const SignIn = () => {
         </label>
       </div>
       <ErrorMessage>{errors.password?.message}</ErrorMessage>
-      {mode === 'signUp' ? (
+      {/* {mode === 'signUp' ? (
         <>
           <select
             {...register('rol')}
@@ -197,7 +195,7 @@ const SignIn = () => {
           </select>
           <ErrorMessage>{errors.rol?.message}</ErrorMessage>
         </>
-      ) : null}
+      ) : null} */}
 
       <motion.button
         transition={{ duration: 500 }}

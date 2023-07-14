@@ -6,75 +6,58 @@ import {
   getDoc,
   doc,
   onSnapshot,
+  updateDoc,
 } from 'firebase/firestore'
-import { User } from '@/models/model'
+import { Note, User } from '@/models/model'
 
-async function getAllUsers(db: Firestore) {
+// CRUD DE USERS
+export async function getAllUsers(db: Firestore) {
   try {
-    const citiesCol = collection(db, 'cities')
-    const citySnapshot = await getDocs(citiesCol)
-    const cityList: User[] = citySnapshot.docs.map(doc => {
-      const { first, last, born, image, description } = doc.data()
+    const usersol = collection(db, 'users')
+    const userSnapshot = await getDocs(usersol)
+    const userList: User[] = userSnapshot.docs.map(doc => {
+      const { correo, rol } = doc.data()
       return {
         id: doc.id,
-        first,
-        last,
-        born,
-        image,
-        description,
+        correo,
+        rol,
       }
     })
-    return cityList
+    return userList
   } catch (error) {
     console.error('Error: ', error)
   }
 }
 
-// async function getAllCities(db: Firestore) {
-//   const querySnapshot = await getDocs(collection(db, 'cities'))
-//   querySnapshot.forEach(doc => {
-//     console.log(`${doc.id} => ${doc.data()}`)
-//   })
-// }
-
-async function getIdUser(db: Firestore, id: string) {
+export async function upgradeIdUserRol(
+  firestore: Firestore,
+  id: string,
+  rol: string
+) {
   try {
-    const documentRef = doc(db, 'cities', id)
-    const documentSnapshot = await getDoc(documentRef)
-
-    if (documentSnapshot.exists()) {
-      const documentData = documentSnapshot.data()
-      return { ...documentData, id: documentSnapshot.id } as User
-    } else {
-      console.log('El documento no existe')
-    }
+    const documentRef = doc(firestore, 'note', id)
+    await updateDoc(documentRef, { rol })
   } catch (error) {
     console.error('Error: ', error)
   }
 }
 
-async function addUser(db: Firestore, body: Object) {
-  try {
-    const docRef = await addDoc(collection(db, 'cities'), body)
-    console.log('Document written with ID: ', docRef.id)
-  } catch (e) {
-    console.error('Error adding document: ', e)
-  }
-}
-
-function getAllUsersUp(db: Firestore, getAllCities: () => void) {
+export function getAllUsersUpgrade(
+  firestore: Firestore,
+  getAllUsers: () => void
+) {
   return onSnapshot(
-    collection(db, 'cities'),
+    collection(firestore, 'users'),
     snapshot => {
       snapshot.docChanges().forEach(change => {
         if (change.type === 'added') {
-          getAllCities()
+          getAllUsers()
         }
         if (change.type === 'modified') {
-          getAllCities()
+          getAllUsers()
         }
         if (change.type === 'removed') {
-          getAllCities()
+          getAllUsers()
         }
       })
     },
@@ -84,4 +67,68 @@ function getAllUsersUp(db: Firestore, getAllCities: () => void) {
   )
 }
 
-export { getAllUsers, addUser, getIdUser, getAllUsersUp }
+// CRUD DE NOTE
+export async function getAllNote(firestore: Firestore) {
+  try {
+    const noteCol = collection(firestore, 'note')
+    const noteSnapshot = await getDocs(noteCol)
+    const noteList: Note[] = noteSnapshot.docs.map(doc => {
+      const { title, description } = doc.data()
+      return {
+        id: doc.id,
+        title,
+        description,
+      }
+    })
+    return noteList
+  } catch (error) {
+    console.error('Error: ', error)
+  }
+}
+
+export async function getIdNote(firestore: Firestore, id: string) {
+  try {
+    const documentRef = doc(firestore, 'note', id)
+    const documentSnapshot = await getDoc(documentRef)
+
+    if (documentSnapshot.exists()) {
+      const documentData = documentSnapshot.data()
+      return { ...documentData, id: documentSnapshot.id } as Note
+    } else {
+      console.log('El documento no existe')
+    }
+  } catch (error) {
+    console.error('Error: ', error)
+  }
+}
+
+export async function addNote(firestore: Firestore, body: Object) {
+  try {
+    const docRef = await addDoc(collection(firestore, 'note'), body)
+    console.log('Document written with ID: ', docRef.id)
+  } catch (e) {
+    console.error('Error adding document: ', e)
+  }
+}
+
+export function getAllNoteUp(firestore: Firestore, getAllNote: () => void) {
+  return onSnapshot(
+    collection(firestore, 'note'),
+    snapshot => {
+      snapshot.docChanges().forEach(change => {
+        if (change.type === 'added') {
+          getAllNote()
+        }
+        if (change.type === 'modified') {
+          getAllNote()
+        }
+        if (change.type === 'removed') {
+          getAllNote()
+        }
+      })
+    },
+    error => {
+      console.log(error)
+    }
+  )
+}
