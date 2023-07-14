@@ -10,5 +10,5 @@ export interface User {
 export interface FormSign {
   email: string
   password: string
-  rol: string | undefined
+  rol: string | ''
 }
