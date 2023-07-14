@@ -19,10 +19,7 @@ const schema = yup
       .string()
       .required('Completa el campo Contraseña')
       .min(6, 'Contraseña - 6 caracteres'),
-    rol: yup
-      .string()
-      .matches(/\S+/, 'El campo Rol no puede estar vacío')
-      .optional(),
+    rol: yup.string().matches(/\S+/, 'El campo Rol no puede estar vacío'),
   })
   .required()
 
@@ -38,39 +35,50 @@ const SignIn = () => {
     resolver: yupResolver(schema),
   })
   const [mode, setMode] = useState<string>('signIn')
+  const [loading, setLoading] = useState<boolean>(false)
   const onSubmit: SubmitHandler<FormSign> = async data => {
     if (mode === 'signIn') {
+      setLoading(true)
       const result: string = await signIn(data.email, data.password)
       if (result === 'auth/user-not-found') {
         setError('email', {
           type: 'manual',
           message: `No se encontro el Usuario`,
         })
+        setLoading(false)
         return
       } else if (result === 'auth/wrong-password') {
         setError('password', {
           type: 'manual',
           message: `Contraseña Incorrecta`,
         })
+        setLoading(false)
         return
       }
     } else if (mode === 'signUp') {
-      const result = await signUp(data.email, data.password, data.rol || 'user')
-
+      setLoading(true)
+      const result: string = await signUp(
+        data.email,
+        data.password,
+        data.rol || 'user'
+      )
       if (result === 'auth/email-already-in-use') {
         setError('email', {
           type: 'manual',
           message: `El correo ya esta registrado`,
         })
+        setLoading(false)
         return
       } else if (result === 'auth/invalid-email') {
         setError('email', {
           type: 'manual',
           message: `El correo es invalido`,
         })
+        setLoading(false)
         return
       }
     }
+    setLoading(false)
     reset()
   }
 
@@ -79,9 +87,14 @@ const SignIn = () => {
       className="bg-transparent absolute gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-wrap flex-col items-center justify-center text-center "
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="flex items-center flex-shrink-0 py-3 text-white  m-auto">
+      <div
+        className={`flex items-center flex-shrink-0 py-3 text-white ${
+          loading ? 'animate-bounce' : null
+        }  m-auto`}
+      >
         <svg
-          aria-label="Next.js logotype"
+          className=""
+          aria-label="Nova"
           width="54"
           height="54"
           role="img"
@@ -176,9 +189,7 @@ const SignIn = () => {
             {...register('rol')}
             className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
           >
-            <option className="hidden" value={''} selected>
-              Selecciona Rol
-            </option>
+            <option className='hidden' selected>Selecciona un Rol</option>
             <option defaultValue={'user'} value="user">
               User
             </option>
@@ -190,11 +201,12 @@ const SignIn = () => {
 
       <motion.button
         transition={{ duration: 500 }}
+        disabled={loading ? true : false}
         className={`transition-colors duration-500 col-span-2 w-full ${
           mode === 'signUp'
             ? 'bg-slate-300 hover:bg-white border-transparent font-bold  text-black'
             : 'hover:border-white border-gray-500 hover:text-white '
-        }  inline-block animate-pulse border text-gray-500  rounded-none px-4 py-2 leading-none mt-4`}
+        }  inline-block  border text-gray-500  rounded-none px-4 py-2 leading-none mt-4`}
         type="submit"
       >
         {mode === 'signIn' ? 'Iniciar Sesion' : 'Registrarse'}

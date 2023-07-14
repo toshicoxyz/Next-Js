@@ -3,6 +3,7 @@
 import { useAuth } from '@/context/AuthContext'
 import { motion } from 'framer-motion'
 import SignIn from '@/components/client/SignIn'
+import LogoutIcon from '@mui/icons-material/Logout'
 
 export default function Home() {
   const { user, signOut } = useAuth()
@@ -16,11 +17,11 @@ export default function Home() {
           width: '100vw',
           alignContent: 'center',
           alignItems: 'center',
-        }}
-        animate={{
           background: user
             ? 'linear-gradient(to left, rgb(17, 24, 39), rgb(9,12,20), rgb(0, 0, 0))'
             : 'linear-gradient(to left top, rgb(17, 24, 39),rgb(9,12,20), rgb(0, 0, 0))',
+        }}
+        animate={{
           height: user ? '60px' : '100vh',
           zIndex: 9999,
           // borderBottom: '1px solid white',
@@ -76,15 +77,16 @@ export default function Home() {
               </span>
             </div>
 
-            <label className="text-center text-gray-400">
-              {user?.email?.split('@')[0]}@ <strong>│</strong> {user?.rol}
+            <label className="text-center text- cursor-text text-gray-500 w-max">
+              {user?.rol.toUpperCase()}
             </label>
 
-            <span
-              onClick={() => signOut()}
-              className="dropdown-item z-30 cursor-pointer"
-            >
-              Salir
+            <span className="dropdown-item z-30 text-gray-500">
+              {user?.email?.split('@')[0]}@{' '}
+              <LogoutIcon
+                onClick={() => signOut()}
+                className={`transition-colors duration-500  hover:text-white  cursor-pointer inline-block `}
+              />
             </span>
           </div>
         ) : (
@@ -92,8 +94,18 @@ export default function Home() {
         )}
 
         {/* SECTION BODY */}
-        {user ? <h1>HOLAAAAAAAAAAA</h1> 
-        : null}
+        {user ? (
+          <div className="flex m-5 justify-around items-center text-center ">
+            {user.rol == 'admin' ? (
+              <div className="border p-1 m-1 w-full">
+                <h1>USUARIOS</h1>
+              </div>
+            ) : null}
+            <div className="border p-1 m-1 w-full">
+              <h1>TAREAS</h1>
+            </div>
+          </div>
+        ) : null}
       </motion.div>
     )
   } else {
