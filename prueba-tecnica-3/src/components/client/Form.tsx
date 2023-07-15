@@ -68,22 +68,6 @@ const Form = () => {
         {...register('description')}
       />
 
-      <p
-        className="col-span-2"
-        style={{
-          fontSize: '0.75rem',
-          textAlign: 'center',
-          fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
-          lineHeight: '1.66',
-          letterSpacing: '0.03333em',
-          fontWeight: '400',
-          color: 'rgba(0, 0, 0, 0.6)',
-          marginTop: '-14px',
-        }}
-      >
-        {errors?.description?.message}
-      </p>
-
       <Button
         size="small"
         sx={{

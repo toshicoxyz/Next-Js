@@ -8,6 +8,12 @@ export interface Note {
   readonly id?: string
   title: string
   description: string
+  invitations?: Invitation[];
+}
+
+export interface Invitation {
+  userId: string;
+  userEmail: string;
 }
 
 export interface FormSign {

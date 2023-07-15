@@ -73,11 +73,12 @@ export async function getAllNote(firestore: Firestore) {
     const noteCol = collection(firestore, 'note')
     const noteSnapshot = await getDocs(noteCol)
     const noteList: Note[] = noteSnapshot.docs.map(doc => {
-      const { title, description } = doc.data()
+      const { title, description, invitations } = doc.data()
       return {
         id: doc.id,
         title,
         description,
+        invitations
       }
     })
     return noteList

@@ -8,9 +8,11 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   User as UserApp,
+  fetchSignInMethodsForEmail,
 } from 'firebase/auth'
 import { auth, firestore } from '@/firebase/config'
 import { setDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { Invitation } from '@/models/model'
 
 interface User extends UserApp {
   rol: string
@@ -25,6 +27,10 @@ type AuthContextType = {
   upgradeNoteDescription: (
     id: string | undefined,
     descripcion: string
+  ) => Promise<void>
+  upgradeNoteInvitations: (
+    id: string | undefined,
+    invitations: Invitation[]
   ) => Promise<void>
   signOut: () => Promise<void>
 }
@@ -126,11 +132,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  async function upgradeNoteDescription(id: string | undefined, description: string) {
+  async function upgradeNoteDescription(
+    id: string | undefined,
+    description: string
+  ) {
     if (id) {
       const documentRef = doc(firestore, `note/${id}`)
       await updateDoc(documentRef, { description })
     }
+  }
+
+  async function upgradeNoteInvitations(
+    id: string | undefined,
+    invitations: Invitation[]
+  ) {
+    const noteRef = doc(firestore, `note/${id}`)
+    await updateDoc(noteRef, { invitations })
   }
 
   // Función para cerrar sesión
@@ -145,6 +162,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  async function sendInvitation(userEmail: string): Promise<string> {
+    // Verificar si el correo electrónico ya está registrado en el sistema
+    const signInMethods = await fetchSignInMethodsForEmail(auth, userEmail);
+    if (signInMethods && signInMethods.length > 0) {
+      // El correo electrónico ya está registrado, puedes enviar la invitación
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, userEmail, 'temporaryPassword');
+        return userCredential.user.uid; // Retorna el ID del usuario invitado
+      } catch (error) {
+        console.error('Error al enviar la invitación:', error);
+        throw new Error('Error al enviar la invitación');
+      }
+    } else {
+      // El correo electrónico no está registrado, muestra un mensaje de error o realiza alguna acción correspondiente
+      console.error('El correo electrónico no está registrado');
+      throw new Error('El correo electrónico no está registrado');
+    }
+  }
+
   const value: AuthContextType = {
     user,
     signIn,
@@ -152,7 +188,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut: handleSignOut,
     upgradeUserRol,
     upgradeNoteTitle,
-    upgradeNoteDescription
+    upgradeNoteDescription,
+    upgradeNoteInvitations,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
