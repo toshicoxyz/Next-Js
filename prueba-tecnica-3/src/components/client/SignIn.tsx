@@ -56,10 +56,7 @@ const SignIn = () => {
       }
     } else if (mode === 'signUp') {
       setLoading(true)
-      const result: string = await signUp(
-        data.email,
-        data.password,
-      )
+      const result: string = await signUp(data.email, data.password)
       if (result === 'auth/email-already-in-use') {
         setError('email', {
           type: 'manual',
@@ -203,12 +200,15 @@ const SignIn = () => {
         className={`transition-colors duration-500 col-span-2 w-full ${
           mode === 'signUp'
             ? 'bg-slate-300 hover:bg-white border-transparent font-bold  text-black'
-            : 'hover:border-white border-gray-500 hover:text-white '
-        }  inline-block  border text-gray-500  rounded-none px-4 py-2 leading-none mt-4`}
+            : 'hover:border-white border-gray-500 hover:text-white text-gray-500 '
+        }  inline-block  border   rounded-none px-4 py-2 leading-none mt-4`}
         type="submit"
       >
         {mode === 'signIn' ? 'Iniciar Sesion' : 'Registrarse'}
       </motion.button>
+      <p className="text-gray-500  bottom-0  text-center">
+        © Copyright 2023 - T O S H I C O
+      </p>
     </form>
   )
 }
