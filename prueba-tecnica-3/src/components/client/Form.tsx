@@ -9,6 +9,7 @@ import * as yup from 'yup'
 import 'react-quill/dist/quill.snow.css'
 import dynamic from 'next/dynamic'
 import { firestore } from '@/firebase/config'
+import ErrorMessage from './custom/ErrorMessage'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
@@ -21,13 +22,9 @@ const schema = yup
       .max(10, 'El máximo de caracteres es 10'),
     description: yup
       .string()
-      .max(200, 'El máximo de caracteres es 200')
-      .matches(/^(?!<p><br\s?\/?><\/p>).+$/, 'No se permiten campo vacios')
-      .matches(
-        /^(?!.*<\/?(h1|h2|h3|li)[^>]*>).*$/,
-        'No se permiten titulos, ni listas'
-      )
-      .required('La descripción es requerida'),
+      .required('Completa el campo Nombre')
+      .matches(/^[A-Za-z]+$/, 'Solo se permiten letras')
+      .max(50, 'El máximo de caracteres es 50'),
   })
   .required()
 
@@ -36,8 +33,6 @@ const Form = () => {
     register,
     handleSubmit,
     reset,
-    trigger,
-    setValue,
     formState: { errors },
   } = useForm<Note>({
     resolver: yupResolver(schema),
@@ -47,43 +42,47 @@ const Form = () => {
     reset()
   }
 
-  const handleDescriptionChange = (value: string) => {
-    setValue('description', value)
-    trigger('description') // Validar el campo 'description' y mostrar los errores
-  }
-
   return (
-    <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit(onSubmit)}>
-      <TextField
-        className="w-full h-max-2 pb-11 col-span-2"
-        helperText={errors.title?.message}
-        label="Titulo"
-        {...register('title')}
-      />
+    <form className="m-auto" onSubmit={handleSubmit(onSubmit)}>
+      <div className="relative">
+        <input
+          placeholder=" "
+          {...register('title')}
+          className="block border-b-2 border-gray-500 rounded-t-lg px-2.5 pb-2.5 p-5 w-full text-sm text-black bg-transparent dark:bg-gray-700   appearance-none   focus:outline-none focus:ring-0 peer"
+        />
+        <label className="absolute  text-sm text-gray-400 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-black peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 flex justify-center">
+          Title
+        </label>
+      </div>
+      <ErrorMessage>{errors.title?.message}</ErrorMessage>
 
-      <TextField
-        className="w-full h-max-2 pb-11 col-span-2"
-        placeholder="Agrega una descripcion"
-        helperText={errors.description?.message}
-        {...register('description')}
-      />
+      <div className="relative">
+        <input
+          placeholder=" "
+          {...register('description')}
+          className="block border-b-2 border-gray-500 rounded-t-lg px-2.5 pb-2.5 p-5 w-full text-sm text-black bg-transparent dark:bg-gray-700   appearance-none   focus:outline-none focus:ring-0 peer"
+        />
+        <label className="absolute  text-sm text-gray-400 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-black peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 flex justify-center">
+          Description
+        </label>
+      </div>
+      <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
       <Button
         size="small"
         sx={{
+          marginTop: '25px',
           padding: 2,
           width: '100%',
-          margin: 'auto',
+
           '&:hover': {
-            backgroundColor: '#007bff',
+            backgroundColor: 'green',
             color: 'white',
-            cursor: 'pointer',
             transition: 'background-color 0.3s ease',
           },
         }}
-        className="col-span-2"
         type="submit"
-        variant="outlined"
+        variant="text"
       >
         Crear Nota
       </Button>

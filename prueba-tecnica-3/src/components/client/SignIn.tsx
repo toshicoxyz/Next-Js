@@ -136,7 +136,7 @@ const SignIn = () => {
         <span
           className={`font-semibold text-xl tracking-tight ${'text-white'}`}
         >
-          OVA
+          OTE
         </span>
       </div>
       <div className="flex gap-3">

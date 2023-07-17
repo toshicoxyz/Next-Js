@@ -1,3 +1,5 @@
+'use client'
+
 import { getAllUsers, getAllUsersUpgrade } from '@/services/crud'
 import { Firestore } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
