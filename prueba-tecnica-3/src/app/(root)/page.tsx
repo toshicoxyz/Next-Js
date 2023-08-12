@@ -6,10 +6,8 @@ import SignIn from '@/components/client/SignIn'
 import LogoutIcon from '@mui/icons-material/Logout'
 import DataList from '@/components/client/DataList'
 import { firestore } from '@/firebase/config'
-import SimpleBar from 'simplebar-react'
-import Form from '@/components/client/Form'
 import ListUsers from '@/components/client/ListUsers'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Logo from '@/components/client/custom/Logo'
 
 export default function Home() {
@@ -72,7 +70,7 @@ export default function Home() {
                     background:
                       'linear-gradient(to left top, rgb(17, 24, 39),rgb(9,12,20), rgb(0, 0, 0))',
                   }}
-                  className="text-gray-500 p-5 text-center left-0"
+                  className="text-gray-500 p-5 text-center left-0 overflow-auto"
                 >
                   <h1 className="text-white">USUARIOS</h1>
                   <ListUsers firestore={firestore}></ListUsers>

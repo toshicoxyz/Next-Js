@@ -139,7 +139,6 @@ export default function DataList({ db }: DataListProps) {
               />
             )}
             <Typography
-              className=""
               suppressContentEditableWarning
               variant="h5"
               component="div"
@@ -155,13 +154,7 @@ export default function DataList({ db }: DataListProps) {
               className="hover:bg-slate-100"
               suppressContentEditableWarning
               onBlur={e => {
-                if (
-                  item.id &&
-                  e.currentTarget?.textContent !== e.currentTarget?.textContent
-                ) {
-                  console.log('Enviado')
-                  upgradeNoteDescription(item.id, e.currentTarget.innerHTML) // Actualiza el título
-                }
+                upgradeNoteDescription(item.id, e.currentTarget.innerHTML) // Actualiza la descripcion
               }}
               contentEditable={Boolean(
                 item.id &&
@@ -181,13 +174,6 @@ export default function DataList({ db }: DataListProps) {
             >
               {item?.description}
             </Typography>
-            {/* <span className="text-black cursor-pointer w-3 absolute top-0  -mt-2 -mr-2 rounded-full">
-              <GroupIcon
-                onMouseEnter={() => setShowInvitations(true)}
-                onMouseLeave={() => setShowInvitations(false)}
-              />
-            
-            </span> */}
             <CardActions>
               <Button
                 sx={{
@@ -222,7 +208,7 @@ export default function DataList({ db }: DataListProps) {
                     {(item.invitations?.length || 0) > 0 && showInvitations && (
                       <ul className="list-inside text-left list-disc p-0">
                         {item.invitations?.map(invitation => (
-                          <li key={invitation.userId} className="mb-2">
+                          <li key={invitation.userId} >
                             {invitation?.userEmail?.split('@')[0]}@
                           </li>
                         ))}

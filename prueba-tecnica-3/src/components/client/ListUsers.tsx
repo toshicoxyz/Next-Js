@@ -42,8 +42,8 @@ const ListUsers = ({ firestore }: ListUsersProps) => {
     <>
       <ol>
         {dataList.map(user => (
-          <li key={user.id} className="justify-around">
-            <span > {user?.correo?.split('@')[0]}@</span>
+          <li key={user.id} className="justify-around ">
+            <span> {user?.correo?.split('@')[0]}@</span>
             {user.rol === 'admin' ? (
               <span className="text-white">{user.rol}</span>
             ) : (
