@@ -11,7 +11,7 @@ import 'simplebar-react/dist/simplebar.min.css'
 export default function Home() {
   return (
     <SimpleBar style={{ maxHeight: '100vh' }}>
-      <main className="flex min-h-screen flex-col items-center justify-between p-20">
+      <main className="flex min-h-screen flex-col items-center justify-between">
         <Grid
           container
           alignItems="center"
