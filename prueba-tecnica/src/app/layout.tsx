@@ -5,7 +5,7 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Prueba Tecnica',
+  title: 'User Cards App | Firebase + Next.js',
   description: 'Crear un Formulario conectarlo con Firebase + Boton',
 }
 
