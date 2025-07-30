@@ -305,7 +305,7 @@ const Home = () => {
         </>
       )}
       <h2 className="text-gray-400 absolute bottom-0 left-0 right-0 text-center p-5">
-        © Copyright 2023 - T O S H I C O
+        © Copyright 2023 - Pedro A. Quispe Colca
       </h2>
     </main>
   )
