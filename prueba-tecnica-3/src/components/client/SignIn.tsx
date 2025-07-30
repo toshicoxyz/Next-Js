@@ -207,7 +207,7 @@ const SignIn = () => {
         {mode === 'signIn' ? 'Iniciar Sesion' : 'Registrarse'}
       </motion.button>
       <p className="text-gray-500  bottom-0  text-center">
-        © Copyright 2023 - T O S H I C O
+        © Copyright 2023 - Pedro A. Quispe Colca
       </p>
     </form>
   )
