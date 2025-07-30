@@ -55,7 +55,7 @@ export default function Home() {
           </div>
 
           <h1 className="pb-3 text-gray-400">
-            © Copyright 2023 - T O S H I C O
+            © Copyright 2023 – Pedro Q. | Proyecto Web Profesional
           </h1>
           <Form />
         </Grid>
